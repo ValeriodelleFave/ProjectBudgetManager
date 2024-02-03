@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SnackBarService } from 'src/assets/services/snack-bar.service';
 
 export interface PeriodicElement {
   project: string;
@@ -7,7 +8,7 @@ export interface PeriodicElement {
   yearCost: number;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
+let ELEMENT_DATA: PeriodicElement[] = [
   { position: 1, project: 'Hydrogen', cost: 1.0079, yearCost: 1.0079 },
   { position: 2, project: 'Helium', cost: 4.0026, yearCost: 4.0026 },
   { position: 3, project: 'Lithium', cost: 6.941, yearCost: 6.941 },
@@ -20,21 +21,38 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { position: 10, project: 'Neon', cost: 20.1797, yearCost: 20.1797 },
 ];
 
-
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  displayedColumns: string[] = ['position', 'project', 'cost', 'yearCost', 'actions'];
-  dataSource = ELEMENT_DATA;
+  public displayedColumns: string[] = ['position', 'project', 'cost', 'yearCost', 'actions'];
+  public dataSource: any;
+
+  constructor(private snackBar: SnackBarService) {
+
+  }
+
+  ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.dataSource = ELEMENT_DATA;
+  }
 
   info(element: any) {
     alert("Info pressed!");
   }
 
+  add() {
+    alert("Added element!");
+  }
+
   delete(element: any) {
-    alert("Deleted element!");
+    ELEMENT_DATA = ELEMENT_DATA.filter((elemento: any) => element.position !== elemento.position);
+    this.loadData();
+    this.snackBar.openSnackBar("Hello")
   }
 }
